@@ -1,0 +1,143 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { DashboardLayout } from "@/components/dashboard-layout"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useAuth } from "@/components/auth-provider"
+import { useRouter } from "next/navigation"
+import { Copy, Eye } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+
+export default function DraftsPage() {
+  const { user } = useAuth()
+  const router = useRouter()
+  const { toast } = useToast()
+  const [drafts, setDrafts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!user) return
+    setLoading(true)
+    fetch('/api/drafts', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        setDrafts(data.drafts || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [user])
+
+  const handleViewDraft = (draftId: string) => {
+    router.push(`/drafts/${draftId}`)
+  }
+
+  const handleCopyDraft = async (draft: any) => {
+    const jdText = `
+Job Title: ${draft.jobTitle}
+Experience Level: ${draft.experienceLevel}
+Work Mode: ${draft.workMode}
+Tech Stack: ${draft.techStack.join(', ')}
+
+About Us:
+${draft.generatedContent.aboutUs}
+
+Responsibilities:
+${draft.generatedContent.responsibilities.map((r: string) => `• ${r}`).join('\n')}
+
+Required Skills:
+${draft.generatedContent.requiredSkills.map((s: string) => `• ${s}`).join('\n')}
+
+Benefits:
+${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
+    `.trim()
+
+    try {
+      await navigator.clipboard.writeText(jdText)
+      toast({
+        title: "Copied to Clipboard",
+        description: "Job description has been copied to your clipboard",
+      })
+    } catch (error) {
+      toast({
+        title: "Copy Failed",
+        description: "Failed to copy to clipboard",
+        variant: "destructive",
+      })
+    }
+  }
+
+  return (
+    <DashboardLayout>
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-3xl font-bold text-foreground mb-4">Your Saved Drafts</h1>
+        {loading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            ))}
+          </div>
+        ) : drafts.length === 0 ? (
+          <div className="text-muted-foreground text-center py-12">No drafts found. Create your first job description!</div>
+        ) : (
+          <div className="space-y-4">
+            {drafts.map((draft) => (
+              <Card key={draft._id} className="hover:shadow-md transition-shadow duration-200">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 cursor-pointer" onClick={() => handleViewDraft(draft._id)}>
+                      <CardTitle className="hover:text-blue-600 transition-colors">{draft.jobTitle}</CardTitle>
+                      <CardDescription>Created: {new Date(draft.createdAt).toLocaleString()}</CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewDraft(draft._id)}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleCopyDraft(draft)}
+                      >
+                        <Copy className="mr-2 h-4 w-4" />
+                        Copy
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm text-muted-foreground mb-2">
+                    {draft.generatedContent?.aboutUs?.slice(0, 120)}{draft.generatedContent?.aboutUs?.length > 120 ? '...' : ''}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      {draft.experienceLevel}
+                    </span>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      {draft.workMode}
+                    </span>
+                    {draft.techStack.slice(0, 3).map((tech: string, index: number) => (
+                      <span key={index} className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
+                        {tech}
+                      </span>
+                    ))}
+                    {draft.techStack.length > 3 && (
+                      <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
+                        +{draft.techStack.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  )
+}
