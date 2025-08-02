@@ -188,36 +188,37 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Create New Job Description</h1>
-          <p className="text-muted-foreground mt-2">
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-0">
+        <div className="space-y-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Create New Job Description</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Fill in the details and let AI generate a compelling job description
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Form */}
           <Card>
-            <CardHeader>
-              <CardTitle>Job Details</CardTitle>
-              <CardDescription>Provide information about the role</CardDescription>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="text-lg sm:text-xl">Job Details</CardTitle>
+              <CardDescription className="text-sm">Provide information about the role</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 sm:space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title *</Label>
+                <Label htmlFor="jobTitle" className="text-sm font-medium">Job Title *</Label>
                 <Input
                   id="jobTitle"
                   placeholder="e.g. Senior Frontend Developer"
                   value={formData.jobTitle}
                   onChange={(e) => setFormData((prev) => ({ ...prev, jobTitle: e.target.value }))}
+                  className="text-sm sm:text-base"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label>Tech Stack</Label>
+                <Label className="text-sm font-medium">Tech Stack</Label>
                 <div className="space-y-3">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       placeholder="Add tech stack (e.g. React, Node.js, Python...)"
                       value={techStackInput}
@@ -234,6 +235,7 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
                           }
                         }
                       }}
+                      className="text-sm sm:text-base"
                     />
                     <Button
                       type="button"
@@ -247,6 +249,7 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
                           setTechStackInput("")
                         }
                       }}
+                      className="w-full sm:w-auto"
                     >
                       Add
                     </Button>
@@ -254,12 +257,12 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
 
                   {/* Display added tech stack */}
                   {formData.techStack.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {formData.techStack.map((tech, index) => (
                         <Badge
                           key={index}
                           variant="default"
-                          className="cursor-pointer"
+                          className="cursor-pointer text-xs"
                           onClick={() => {
                             setFormData((prev) => ({
                               ...prev,
@@ -276,15 +279,15 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
 
                   {/* Suggested tech stack */}
                   <div className="space-y-2">
-                    <Label className="text-sm text-muted-foreground">Popular suggestions:</Label>
-                    <div className="flex flex-wrap gap-2">
+                    <Label className="text-xs sm:text-sm text-muted-foreground">Popular suggestions:</Label>
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {techStackOptions
                         .filter((tech) => !formData.techStack.includes(tech))
                         .map((tech) => (
                           <Badge
                             key={tech}
                             variant="outline"
-                            className="cursor-pointer hover:bg-muted"
+                            className="cursor-pointer hover:bg-muted text-xs"
                             onClick={() => {
                               if (!formData.techStack.includes(tech)) {
                                 setFormData((prev) => ({
@@ -303,12 +306,12 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
               </div>
 
               <div className="space-y-2">
-                <Label>Experience Level *</Label>
+                <Label className="text-sm font-medium">Experience Level *</Label>
                 <Select
                   value={formData.experienceLevel}
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, experienceLevel: value }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm sm:text-base">
                     <SelectValue placeholder="Select experience level" />
                   </SelectTrigger>
                   <SelectContent>
@@ -322,33 +325,35 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
               </div>
 
               <div className="space-y-2">
-                <Label>Work Mode *</Label>
+                <Label className="text-sm font-medium">Work Mode *</Label>
                 <RadioGroup
                   value={formData.workMode}
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, workMode: value }))}
+                  className="space-y-2"
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="remote" id="remote" />
-                    <Label htmlFor="remote">Remote</Label>
+                    <Label htmlFor="remote" className="text-sm">Remote</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="onsite" id="onsite" />
-                    <Label htmlFor="onsite">On-site</Label>
+                    <Label htmlFor="onsite" className="text-sm">On-site</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="hybrid" id="hybrid" />
-                    <Label htmlFor="hybrid">Hybrid</Label>
+                    <Label htmlFor="hybrid" className="text-sm">Hybrid</Label>
                   </div>
                 </RadioGroup>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="aboutCompany">About Company (Optional)</Label>
+                <Label htmlFor="aboutCompany" className="text-sm font-medium">About Company (Optional)</Label>
                 <Textarea
                   id="aboutCompany"
                   placeholder="Brief description of your company..."
                   value={formData.aboutCompany}
                   onChange={(e) => setFormData((prev) => ({ ...prev, aboutCompany: e.target.value }))}
+                  className="text-sm sm:text-base min-h-[80px]"
                 />
               </div>
 
@@ -370,52 +375,55 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
 
           {/* Generated JD */}
           {generatedJD && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Generated Job Description</CardTitle>
-                <CardDescription>AI-generated content based on your inputs</CardDescription>
+            <Card className="lg:sticky lg:top-6 lg:h-fit">
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-lg sm:text-xl">Generated Job Description</CardTitle>
+                <CardDescription className="text-sm">AI-generated content based on your inputs</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">About Us</h3>
-                  <p className="text-foreground">{generatedJD.aboutUs}</p>
+              <CardContent className="space-y-4 sm:space-y-6">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-base sm:text-lg text-foreground">About Us</h3>
+                  <p className="text-sm sm:text-base text-foreground leading-relaxed">{generatedJD.aboutUs}</p>
                 </div>
 
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Responsibilities</h3>
-                  <ul className="space-y-1">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-base sm:text-lg text-foreground">Responsibilities</h3>
+                  <ul className="space-y-1.5 sm:space-y-2">
                     {generatedJD.responsibilities.map((resp: string, index: number) => (
-                      <li key={index} className="text-foreground">
-                        • {resp}
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-1 flex-shrink-0">•</span>
+                        <span className="text-sm sm:text-base text-foreground leading-relaxed">{resp}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Required Skills</h3>
-                  <ul className="space-y-1">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-base sm:text-lg text-foreground">Required Skills</h3>
+                  <ul className="space-y-1.5 sm:space-y-2">
                     {generatedJD.requiredSkills.map((skill: string, index: number) => (
-                      <li key={index} className="text-foreground">
-                        • {skill}
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-green-600 mt-1 flex-shrink-0">•</span>
+                        <span className="text-sm sm:text-base text-foreground leading-relaxed">{skill}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Benefits</h3>
-                  <ul className="space-y-1">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-base sm:text-lg text-foreground">Benefits</h3>
+                  <ul className="space-y-1.5 sm:space-y-2">
                     {generatedJD.benefits.map((benefit: string, index: number) => (
-                      <li key={index} className="text-foreground">
-                        • {benefit}
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-purple-600 mt-1 flex-shrink-0">•</span>
+                        <span className="text-sm sm:text-base text-foreground leading-relaxed">{benefit}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="flex gap-2 pt-4">
-                  <Button onClick={handleSaveDraft} disabled={isSaving} variant="outline">
+                <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
+                  <Button onClick={handleSaveDraft} disabled={isSaving} variant="outline" className="w-full sm:w-auto">
                     {isSaving ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
@@ -428,7 +436,7 @@ ${generatedJD.benefits.map((b: string) => `• ${b}`).join("\n")}
                       </>
                     )}
                   </Button>
-                  <Button onClick={handleCopyJD}>
+                  <Button onClick={handleCopyJD} className="w-full sm:w-auto">
                     <Copy className="mr-2 h-4 w-4" />
                     Copy JD
                   </Button>
