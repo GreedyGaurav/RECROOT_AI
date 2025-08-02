@@ -86,15 +86,15 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="flex items-center gap-4">
-            <Skeleton className="h-8 w-8" />
-            <Skeleton className="h-8 w-64" />
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-0">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Skeleton className="h-8 w-8 sm:h-10 sm:w-10" />
+            <Skeleton className="h-6 w-48 sm:h-8 sm:w-64" />
           </div>
-          <div className="space-y-4">
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
+          <div className="space-y-3 sm:space-y-4">
+            <Skeleton className="h-24 sm:h-32 w-full" />
+            <Skeleton className="h-24 sm:h-32 w-full" />
+            <Skeleton className="h-24 sm:h-32 w-full" />
           </div>
         </div>
       </DashboardLayout>
@@ -104,8 +104,8 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
   if (!draft) {
     return (
       <DashboardLayout>
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="text-center py-12">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-0">
+          <div className="text-center py-8 sm:py-12">
             <p className="text-muted-foreground">Draft not found</p>
           </div>
         </div>
@@ -115,24 +115,30 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-0">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
             <Button
               variant="outline"
               size="sm"
               onClick={() => router.push('/drafts')}
+              className="w-fit"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Drafts
+              <span className="hidden sm:inline">Back to Drafts</span>
+              <span className="sm:hidden">Back</span>
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">{draft.jobTitle}</h1>
-              <p className="text-muted-foreground">Created on {new Date(draft.createdAt).toLocaleString()}</p>
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight">
+                {draft.jobTitle}
+              </h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Created on {new Date(draft.createdAt).toLocaleString()}
+              </p>
             </div>
           </div>
-          <Button onClick={handleCopy}>
+          <Button onClick={handleCopy} className="w-full sm:w-auto">
             <Copy className="mr-2 h-4 w-4" />
             Copy JD
           </Button>
@@ -140,35 +146,35 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
 
         {/* Job Details */}
         <Card>
-          <CardHeader>
-            <CardTitle>Job Details</CardTitle>
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="text-lg sm:text-xl">Job Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               <div className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Experience:</span>
-                <Badge variant="outline">{draft.experienceLevel}</Badge>
+                <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium">Experience:</span>
+                <Badge variant="outline" className="text-xs">{draft.experienceLevel}</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Work Mode:</span>
-                <Badge variant="outline">{draft.workMode}</Badge>
+                <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium">Work Mode:</span>
+                <Badge variant="outline" className="text-xs">{draft.workMode}</Badge>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Created:</span>
-                <span className="text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1">
+                <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium">Created:</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">
                   {new Date(draft.createdAt).toLocaleDateString()}
                 </span>
               </div>
             </div>
             {draft.techStack.length > 0 && (
-              <div>
-                <span className="text-sm font-medium">Tech Stack:</span>
-                <div className="flex flex-wrap gap-2 mt-2">
+              <div className="space-y-2">
+                <span className="text-xs sm:text-sm font-medium">Tech Stack:</span>
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {draft.techStack.map((tech: string, index: number) => (
-                    <Badge key={index} variant="secondary">
+                    <Badge key={index} variant="secondary" className="text-xs">
                       {tech}
                     </Badge>
                   ))}
@@ -176,35 +182,37 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
               </div>
             )}
             {draft.aboutCompany && (
-              <div>
-                <span className="text-sm font-medium">About Company:</span>
-                <p className="text-sm text-muted-foreground mt-1">{draft.aboutCompany}</p>
+              <div className="space-y-1">
+                <span className="text-xs sm:text-sm font-medium">About Company:</span>
+                <p className="text-xs sm:text-sm text-muted-foreground">{draft.aboutCompany}</p>
               </div>
             )}
           </CardContent>
         </Card>
 
         {/* Generated Content */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>About Us</CardTitle>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="text-lg sm:text-xl">About Us</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-foreground">{draft.generatedContent.aboutUs}</p>
+              <p className="text-sm sm:text-base text-foreground leading-relaxed">
+                {draft.generatedContent.aboutUs}
+              </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Responsibilities</CardTitle>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="text-lg sm:text-xl">Responsibilities</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2">
+              <ul className="space-y-2 sm:space-y-3">
                 {draft.generatedContent.responsibilities.map((resp: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-1">•</span>
-                    <span className="text-foreground">{resp}</span>
+                  <li key={index} className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-blue-600 mt-1 flex-shrink-0">•</span>
+                    <span className="text-sm sm:text-base text-foreground leading-relaxed">{resp}</span>
                   </li>
                 ))}
               </ul>
@@ -212,15 +220,15 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Required Skills</CardTitle>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="text-lg sm:text-xl">Required Skills</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2">
+              <ul className="space-y-2 sm:space-y-3">
                 {draft.generatedContent.requiredSkills.map((skill: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-green-600 mt-1">•</span>
-                    <span className="text-foreground">{skill}</span>
+                  <li key={index} className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-1 flex-shrink-0">•</span>
+                    <span className="text-sm sm:text-base text-foreground leading-relaxed">{skill}</span>
                   </li>
                 ))}
               </ul>
@@ -228,15 +236,15 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Benefits</CardTitle>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="text-lg sm:text-xl">Benefits</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2">
+              <ul className="space-y-2 sm:space-y-3">
                 {draft.generatedContent.benefits.map((benefit: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-purple-600 mt-1">•</span>
-                    <span className="text-foreground">{benefit}</span>
+                  <li key={index} className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-purple-600 mt-1 flex-shrink-0">•</span>
+                    <span className="text-sm sm:text-base text-foreground leading-relaxed">{benefit}</span>
                   </li>
                 ))}
               </ul>
