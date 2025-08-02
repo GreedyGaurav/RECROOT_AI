@@ -1,0 +1,3 @@
+[33m0231072[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Implement registration flow: redirect to login after registration instead of auto-login
+[33m98c1246[m Improve mobile sidebar design and fix light mode styling
+[33md32612e[m deploy project

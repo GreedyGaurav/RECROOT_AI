@@ -1,6 +1,8 @@
-# Recroot AI Dashboard
+# Recroot AI - AI-Powered Job Description Assistant
 
-A full-stack Next.js application with authentication, user management, and AI-powered job description generation using Google's Gemini API.
+> **Latest Update**: Registration flow now redirects to login page after successful registration.
+
+A modern web application for generating and optimizing job descriptions using AI technology.
 
 ## Features
 
