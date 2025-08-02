@@ -92,8 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json()
 
       if (response.ok) {
-        setUser(data.user)
-        return { success: true }
+        // Don't set user state - user needs to login separately
+        return { success: true, message: data.message }
       } else {
         return { success: false, error: data.error }
       }

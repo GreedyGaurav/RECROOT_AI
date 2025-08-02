@@ -39,7 +39,8 @@ export default function RegisterPage() {
     const result = await register(name, email, password)
     
     if (result.success) {
-      router.push("/")
+      // Redirect to login page after successful registration
+      router.push("/login?registered=true")
     } else {
       setError(result.error || "Registration failed")
     }

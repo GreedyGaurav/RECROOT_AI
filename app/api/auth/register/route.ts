@@ -1,21 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/lib/models/User';
-import { generateToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
     console.log('Registration attempt started');
     
-    // Check if JWT_SECRET is set
-    if (!process.env.JWT_SECRET) {
-      console.error('JWT_SECRET is not set');
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
-
     await dbConnect();
     console.log('Database connected successfully');
 
@@ -53,33 +43,10 @@ export async function POST(request: NextRequest) {
     await user.save();
     console.log('User created successfully:', email);
 
-    // Generate JWT token
-    const token = generateToken({
-      userId: user._id.toString(),
-      email: user.email,
-      role: user.role,
-    });
-
-    console.log('JWT token generated for new user');
-
-    // Create response
+    // Return success response without setting authentication cookie
     const response = NextResponse.json({
-      message: 'Registration successful',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        role: user.role,
-      },
-    });
-
-    // Set HTTP-only cookie
-    response.cookies.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      message: 'Registration successful! Please login to continue.',
+      success: true,
     });
 
     console.log('Registration successful for user:', email);
