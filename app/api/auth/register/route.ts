@@ -5,21 +5,28 @@ import { generateToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    await dbConnect();
-
-    const { name, email, password } = await request.json();
-
-    // Validate input
-    if (!name || !email || !password) {
+    console.log('Registration attempt started');
+    
+    // Check if JWT_SECRET is set
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not set');
       return NextResponse.json(
-        { error: 'Name, email, and password are required' },
-        { status: 400 }
+        { error: 'Server configuration error' },
+        { status: 500 }
       );
     }
 
-    if (password.length < 6) {
+    await dbConnect();
+    console.log('Database connected successfully');
+
+    const { name, email, password } = await request.json();
+    console.log('Registration attempt for email:', email);
+
+    // Validate input
+    if (!name || !email || !password) {
+      console.log('Missing required fields');
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
+        { error: 'Name, email, and password are required' },
         { status: 400 }
       );
     }
@@ -27,6 +34,7 @@ export async function POST(request: NextRequest) {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      console.log('User already exists:', email);
       return NextResponse.json(
         { error: 'User with this email already exists' },
         { status: 409 }
@@ -34,11 +42,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new user
-    const user = await User.create({
+    const user = new User({
       name,
       email,
       password,
+      role: 'user',
+      isActive: true,
     });
+
+    await user.save();
+    console.log('User created successfully:', email);
 
     // Generate JWT token
     const token = generateToken({
@@ -47,20 +60,19 @@ export async function POST(request: NextRequest) {
       role: user.role,
     });
 
+    console.log('JWT token generated for new user');
+
     // Create response
-    const response = NextResponse.json(
-      {
-        message: 'User registered successfully',
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar,
-          role: user.role,
-        },
+    const response = NextResponse.json({
+      message: 'Registration successful',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
       },
-      { status: 201 }
-    );
+    });
 
     // Set HTTP-only cookie
     response.cookies.set('token', token, {
@@ -70,6 +82,7 @@ export async function POST(request: NextRequest) {
       maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 
+    console.log('Registration successful for user:', email);
     return response;
   } catch (error: any) {
     console.error('Registration error:', error);
