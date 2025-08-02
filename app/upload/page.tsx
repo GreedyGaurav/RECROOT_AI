@@ -97,58 +97,60 @@ export default function UploadPage() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/20">
-            <Upload className="h-6 w-6 text-blue-600" />
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-0">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="p-2 sm:p-3 rounded-full bg-blue-100 dark:bg-blue-900/20 w-fit">
+            <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Upload Competitor JD</h1>
-            <p className="text-muted-foreground">Add competitor job descriptions for analysis</p>
+          <div className="space-y-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Upload Competitor JD</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Add competitor job descriptions for analysis</p>
           </div>
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
               Competitor Job Description
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Enter the details of a competitor's job description to analyze and compare
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Job Title */}
               <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title *</Label>
+                <Label htmlFor="jobTitle" className="text-sm font-medium">Job Title *</Label>
                 <Input
                   id="jobTitle"
                   placeholder="e.g., Senior React Developer"
                   value={formData.jobTitle}
                   onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                  className="text-sm sm:text-base"
                   required
                 />
               </div>
 
               {/* Company Name */}
               <div className="space-y-2">
-                <Label htmlFor="companyName">Company Name *</Label>
+                <Label htmlFor="companyName" className="text-sm font-medium">Company Name *</Label>
                 <Input
                   id="companyName"
                   placeholder="e.g., Tech Corp Inc."
                   value={formData.companyName}
                   onChange={(e) => handleInputChange('companyName', e.target.value)}
+                  className="text-sm sm:text-base"
                   required
                 />
               </div>
 
               {/* Experience Level */}
               <div className="space-y-2">
-                <Label htmlFor="experienceLevel">Experience Level</Label>
+                <Label htmlFor="experienceLevel" className="text-sm font-medium">Experience Level</Label>
                 <Select value={formData.experienceLevel} onValueChange={(value) => handleInputChange('experienceLevel', value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm sm:text-base">
                     <SelectValue placeholder="Select experience level" />
                   </SelectTrigger>
                   <SelectContent>
@@ -163,9 +165,9 @@ export default function UploadPage() {
 
               {/* Work Mode */}
               <div className="space-y-2">
-                <Label htmlFor="workMode">Work Mode</Label>
+                <Label htmlFor="workMode" className="text-sm font-medium">Work Mode</Label>
                 <Select value={formData.workMode} onValueChange={(value) => handleInputChange('workMode', value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm sm:text-base">
                     <SelectValue placeholder="Select work mode" />
                   </SelectTrigger>
                   <SelectContent>
@@ -178,34 +180,35 @@ export default function UploadPage() {
 
               {/* Tech Stack */}
               <div className="space-y-2">
-                <Label htmlFor="techStack">Tech Stack (comma-separated)</Label>
+                <Label htmlFor="techStack" className="text-sm font-medium">Tech Stack (comma-separated)</Label>
                 <Input
                   id="techStack"
                   placeholder="e.g., React, Node.js, MongoDB, TypeScript"
                   value={formData.techStack}
                   onChange={(e) => handleInputChange('techStack', e.target.value)}
+                  className="text-sm sm:text-base"
                 />
               </div>
 
               {/* Job Description */}
               <div className="space-y-2">
-                <Label htmlFor="jobDescription">Job Description *</Label>
+                <Label htmlFor="jobDescription" className="text-sm font-medium">Job Description *</Label>
                 <Textarea
                   id="jobDescription"
                   placeholder="Paste the complete job description here..."
                   value={formData.jobDescription}
                   onChange={(e) => handleInputChange('jobDescription', e.target.value)}
-                  className="min-h-[200px]"
+                  className="min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"
                   required
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Copy and paste the full job description from the competitor's website or job posting
                 </p>
               </div>
 
               {/* Submit Button */}
               <div className="flex justify-end">
-                <Button type="submit" disabled={loading} className="min-w-[150px]">
+                <Button type="submit" disabled={loading} className="w-full sm:w-auto min-w-[150px]">
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
@@ -225,34 +228,34 @@ export default function UploadPage() {
 
         {/* Instructions Card */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Building2 className="h-4 w-4 sm:h-5 sm:w-5" />
               How to Use
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <h4 className="font-medium">Step 1: Find Competitor JDs</h4>
-              <p className="text-sm text-muted-foreground">
+          <CardContent className="space-y-3 sm:space-y-4">
+            <div className="space-y-1 sm:space-y-2">
+              <h4 className="font-medium text-sm sm:text-base">Step 1: Find Competitor JDs</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Visit competitor company websites, job boards, or LinkedIn to find job descriptions for similar roles.
               </p>
             </div>
-            <div className="space-y-2">
-              <h4 className="font-medium">Step 2: Copy the Content</h4>
-              <p className="text-sm text-muted-foreground">
+            <div className="space-y-1 sm:space-y-2">
+              <h4 className="font-medium text-sm sm:text-base">Step 2: Copy the Content</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Copy the complete job description text, including responsibilities, requirements, and benefits.
               </p>
             </div>
-            <div className="space-y-2">
-              <h4 className="font-medium">Step 3: Fill the Form</h4>
-              <p className="text-sm text-muted-foreground">
+            <div className="space-y-1 sm:space-y-2">
+              <h4 className="font-medium text-sm sm:text-base">Step 3: Fill the Form</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Enter the job title, company name, and paste the full job description. Add optional details like experience level and tech stack.
               </p>
             </div>
-            <div className="space-y-2">
-              <h4 className="font-medium">Step 4: Analyze</h4>
-              <p className="text-sm text-muted-foreground">
+            <div className="space-y-1 sm:space-y-2">
+              <h4 className="font-medium text-sm sm:text-base">Step 4: Analyze</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Once uploaded, you can compare these competitor JDs with your own to identify trends and opportunities.
               </p>
             </div>
