@@ -55,7 +55,7 @@ function LoginForm() {
         <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500" />
       </div>
 
-      <Card className="relative z-10 w-full max-w-md group overflow-hidden border-0 bg-[var(--card-bg-alpha)]/5 backdrop-blur-xl hover:scale-[1.01] transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-purple-500/25 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+      <Card className="relative z-10 w-full max-w-md group overflow-hidden border-0 bg-black/5 backdrop-blur-xl hover:scale-[1.01] transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-purple-500/25 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <CardHeader className="space-y-2 p-6 sm:p-8 relative z-10 border-b border-white/10">
           <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-to-r from-[var(--text-gradient-primary-start)] to-[var(--text-gradient-primary-via)] bg-clip-text text-transparent">
@@ -97,7 +97,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="text-sm sm:text-base bg-[var(--card-bg-alpha)]/10 border-[var(--card-border-alpha)]/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
+                className="text-sm sm:text-base bg-black/20 border-white/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
               />
             </div>
 
@@ -112,7 +112,7 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="text-sm sm:text-base bg-[var(--card-bg-alpha)]/10 border-[var(--card-border-alpha)]/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
+                className="text-sm sm:text-base bg-black/20 border-white/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
               />
             </div>
 
@@ -154,7 +154,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
-          <Card className="w-full max-w-md bg-[var(--card-bg-alpha)]/5 backdrop-blur-xl border border-[var(--card-border-alpha)]/10">
+          <Card className="w-full max-w-md bg-black/5 backdrop-blur-xl border border-white/10">
             <CardHeader className="space-y-1 p-6 sm:p-8">
               <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-[var(--text-gradient-primary-start)] to-[var(--text-gradient-primary-via)] bg-clip-text text-transparent">
                 Login
