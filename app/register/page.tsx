@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { useAuth } from "@/components/auth-provider"
 import { Button } from "@/components/ui/button"
@@ -9,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { XCircle } from "lucide-react" // Added XCircle for error messages
 
 export default function RegisterPage() {
   const [name, setName] = useState("")
@@ -22,105 +25,146 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
+    setError("") // Clear previous errors
 
     if (password !== confirmPassword) {
       setError("Passwords do not match")
       return
     }
-
     if (password.length < 6) {
       setError("Password must be at least 6 characters long")
       return
     }
 
     setLoading(true)
-
     const result = await register(name, email, password)
-    
+
     if (result.success) {
       // Redirect to login page after successful registration
       router.push("/login?registered=true")
     } else {
       setError(result.error || "Registration failed")
     }
-    
+
     setLoading(false)
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Register</CardTitle>
-          <CardDescription className="text-center">
+    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-[var(--page-bg-gradient-start)] via-[var(--page-bg-gradient-via)] to-[var(--page-bg-gradient-end)] overflow-hidden p-4 sm:p-6">
+      {/* Ambient Background Effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500" />
+      </div>
+
+      <Card className="relative z-10 w-full max-w-md group overflow-hidden border-0 bg-[var(--card-bg-alpha)]/5 backdrop-blur-xl hover:scale-[1.01] transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-purple-500/25 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <CardHeader className="space-y-2 p-6 sm:p-8 relative z-10 border-b border-white/10">
+          <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-to-r from-[var(--text-gradient-primary-start)] to-[var(--text-gradient-primary-via)] bg-clip-text text-transparent">
+            Join Recroot AI
+          </CardTitle>
+          <CardDescription className="text-center text-sm sm:text-base text-white/70">
             Create a new account to get started
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="p-6 sm:p-8 relative z-10">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+              <Alert
+                variant="destructive"
+                className="relative overflow-hidden border-red-400/30 bg-red-900/30 text-red-200 backdrop-blur-sm animate-in fade-in-50 slide-in-from-top-2 duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-transparent" />
+                <XCircle className="h-4 w-4 text-red-400 relative z-10" />
+                <AlertDescription className="relative z-10">{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="text-sm font-medium text-white/80">
+                Full Name
+              </Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="Your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="text-sm sm:text-base bg-[var(--card-bg-alpha)]/10 border-[var(--card-border-alpha)]/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
               />
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-white/80">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="your@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="text-sm sm:text-base bg-[var(--card-bg-alpha)]/10 border-[var(--card-border-alpha)]/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
               />
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-white/80">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="text-sm sm:text-base bg-[var(--card-bg-alpha)]/10 border-[var(--card-border-alpha)]/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
               />
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-sm font-medium text-white/80">
+                Confirm Password
+              </Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                className="text-sm sm:text-base bg-[var(--card-bg-alpha)]/10 border-[var(--card-border-alpha)]/20 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all duration-300"
               />
             </div>
-            
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating account..." : "Register"}
+
+            <Button
+              type="submit"
+              className="w-full relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 group"
+              disabled={loading}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <span className="relative">Creating account...</span>
+                </>
+              ) : (
+                <span className="relative">Register</span>
+              )}
             </Button>
-            
-            <div className="text-center text-sm">
+
+            <div className="text-center text-sm text-white/70">
               Already have an account?{" "}
-              <Link href="/login" className="text-blue-600 hover:underline">
+              <Link
+                href="/login"
+                className="relative text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200 group"
+              >
                 Login here
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </Link>
             </div>
           </form>
@@ -128,4 +172,4 @@ export default function RegisterPage() {
       </Card>
     </div>
   )
-} 
+}
