@@ -34,6 +34,23 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Hero section and auth pages variables - consistent across themes */
+    --page-bg-gradient-start: #0f0f23;
+    --page-bg-gradient-via: #1a1a2e;
+    --page-bg-gradient-end: #16213e;
+    --hero-bg-purple: rgba(147, 51, 234, 0.3);
+    --hero-bg-blue: rgba(59, 130, 246, 0.3);
+    --hero-bg-pink: rgba(236, 72, 153, 0.3);
+    --hero-bg-cyan: rgba(6, 182, 212, 0.3);
+    --card-bg-alpha: rgba(255, 255, 255, 0.1);
+    --card-border-alpha: rgba(255, 255, 255, 0.2);
+    --hero-text: rgba(255, 255, 255, 0.8);
+    --text-gradient-primary-start: #60a5fa;
+    --text-gradient-primary-via: #a855f7;
+    --text-gradient-primary-end: #ec4899;
+    --nav-gradient-start: #3b82f6;
+    --nav-gradient-end: #8b5cf6;
   }
 
   .dark {
@@ -66,6 +83,23 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Hero section and auth pages variables - consistent across themes */
+    --page-bg-gradient-start: #0f0f23;
+    --page-bg-gradient-via: #1a1a2e;
+    --page-bg-gradient-end: #16213e;
+    --hero-bg-purple: rgba(147, 51, 234, 0.3);
+    --hero-bg-blue: rgba(59, 130, 246, 0.3);
+    --hero-bg-pink: rgba(236, 72, 153, 0.3);
+    --hero-bg-cyan: rgba(6, 182, 212, 0.3);
+    --card-bg-alpha: rgba(255, 255, 255, 0.1);
+    --card-border-alpha: rgba(255, 255, 255, 0.2);
+    --hero-text: rgba(255, 255, 255, 0.8);
+    --text-gradient-primary-start: #60a5fa;
+    --text-gradient-primary-via: #a855f7;
+    --text-gradient-primary-end: #ec4899;
+    --nav-gradient-start: #3b82f6;
+    --nav-gradient-end: #8b5cf6;
   }
 }
 
