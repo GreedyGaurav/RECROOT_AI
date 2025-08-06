@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/components/auth-provider"
 import { useRouter } from "next/navigation"
-import { Copy, Eye } from "lucide-react"
+import { Copy, Eye, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 export default function DraftsPage() {
   const { user } = useAuth()
@@ -16,6 +17,7 @@ export default function DraftsPage() {
   const { toast } = useToast()
   const [drafts, setDrafts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user) return
@@ -68,6 +70,34 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
     }
   }
 
+  const handleDeleteDraft = async (draftId: string) => {
+    setDeletingId(draftId)
+    try {
+      const response = await fetch(`/api/drafts/${draftId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+
+      if (response.ok) {
+        setDrafts(prev => prev.filter(draft => draft._id !== draftId))
+        toast({
+          title: "Draft Deleted",
+          description: "The draft has been successfully deleted",
+        })
+      } else {
+        throw new Error('Failed to delete draft')
+      }
+    } catch (error) {
+      toast({
+        title: "Delete Failed",
+        description: "Failed to delete the draft. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-0">
@@ -115,6 +145,38 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
                         <Copy className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                         <span className="hidden sm:inline">Copy</span>
                       </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50"
+                            disabled={deletingId === draft._id}
+                          >
+                            <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">
+                              {deletingId === draft._id ? 'Deleting...' : 'Delete'}
+                            </span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="sm:max-w-md">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Draft</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete "{draft.jobTitle}"? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0">
+                            <AlertDialogCancel className="w-full sm:w-auto">Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteDraft(draft._id)}
+                              className="w-full sm:w-auto bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </CardHeader>
