@@ -47,25 +47,38 @@ export default function DraftDetailPage() {
   }, [params.id, router, toast])
 
   const handleCopy = async () => {
-    if (!draft) return
+    if (!draft || !draft.generatedContent) {
+      toast({
+        title: "Error",
+        description: "Draft data is incomplete",
+        variant: "destructive",
+      })
+      return
+    }
 
     const jdText = `
-Job Title: ${draft.jobTitle}
-Experience Level: ${draft.experienceLevel}
-Work Mode: ${draft.workMode}
-Tech Stack: ${draft.techStack.join(', ')}
+Job Title: ${draft.jobTitle || 'N/A'}
+Experience Level: ${draft.experienceLevel || 'N/A'}
+Work Mode: ${draft.workMode || 'N/A'}
+Tech Stack: ${Array.isArray(draft.techStack) ? draft.techStack.join(', ') : 'N/A'}
 
 About Us:
-${draft.generatedContent.aboutUs}
+${draft.generatedContent.aboutUs || 'N/A'}
 
 Responsibilities:
-${draft.generatedContent.responsibilities.map((r: string) => `• ${r}`).join('\n')}
+${Array.isArray(draft.generatedContent.responsibilities)
+  ? draft.generatedContent.responsibilities.map((r: string) => `• ${r}`).join('\n')
+  : 'N/A'}
 
 Required Skills:
-${draft.generatedContent.requiredSkills.map((s: string) => `• ${s}`).join('\n')}
+${Array.isArray(draft.generatedContent.requiredSkills)
+  ? draft.generatedContent.requiredSkills.map((s: string) => `• ${s}`).join('\n')
+  : 'N/A'}
 
 Benefits:
-${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
+${Array.isArray(draft.generatedContent.benefits)
+  ? draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')
+  : 'N/A'}
     `.trim()
 
     try {
@@ -169,7 +182,7 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
                 </span>
               </div>
             </div>
-            {draft.techStack.length > 0 && (
+            {Array.isArray(draft.techStack) && draft.techStack.length > 0 && (
               <div className="space-y-2">
                 <span className="text-xs sm:text-sm font-medium">Tech Stack:</span>
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -209,12 +222,15 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 sm:space-y-3">
-                {draft.generatedContent.responsibilities.map((resp: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2 sm:gap-3">
-                    <span className="text-blue-600 mt-1 flex-shrink-0">•</span>
-                    <span className="text-sm sm:text-base text-foreground leading-relaxed">{resp}</span>
-                  </li>
-                ))}
+                {Array.isArray(draft.generatedContent.responsibilities) && draft.generatedContent.responsibilities.length > 0
+                  ? draft.generatedContent.responsibilities.map((resp: string, index: number) => (
+                      <li key={index} className="flex items-start gap-2 sm:gap-3">
+                        <span className="text-blue-600 mt-1 flex-shrink-0">•</span>
+                        <span className="text-sm sm:text-base text-foreground leading-relaxed">{resp}</span>
+                      </li>
+                    ))
+                  : <li className="text-sm text-muted-foreground">No responsibilities listed</li>
+                }
               </ul>
             </CardContent>
           </Card>
@@ -225,12 +241,15 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 sm:space-y-3">
-                {draft.generatedContent.requiredSkills.map((skill: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2 sm:gap-3">
-                    <span className="text-green-600 mt-1 flex-shrink-0">•</span>
-                    <span className="text-sm sm:text-base text-foreground leading-relaxed">{skill}</span>
-                  </li>
-                ))}
+                {Array.isArray(draft.generatedContent.requiredSkills) && draft.generatedContent.requiredSkills.length > 0
+                  ? draft.generatedContent.requiredSkills.map((skill: string, index: number) => (
+                      <li key={index} className="flex items-start gap-2 sm:gap-3">
+                        <span className="text-green-600 mt-1 flex-shrink-0">•</span>
+                        <span className="text-sm sm:text-base text-foreground leading-relaxed">{skill}</span>
+                      </li>
+                    ))
+                  : <li className="text-sm text-muted-foreground">No skills listed</li>
+                }
               </ul>
             </CardContent>
           </Card>
@@ -241,12 +260,15 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 sm:space-y-3">
-                {draft.generatedContent.benefits.map((benefit: string, index: number) => (
-                  <li key={index} className="flex items-start gap-2 sm:gap-3">
-                    <span className="text-purple-600 mt-1 flex-shrink-0">•</span>
-                    <span className="text-sm sm:text-base text-foreground leading-relaxed">{benefit}</span>
-                  </li>
-                ))}
+                {Array.isArray(draft.generatedContent.benefits) && draft.generatedContent.benefits.length > 0
+                  ? draft.generatedContent.benefits.map((benefit: string, index: number) => (
+                      <li key={index} className="flex items-start gap-2 sm:gap-3">
+                        <span className="text-purple-600 mt-1 flex-shrink-0">•</span>
+                        <span className="text-sm sm:text-base text-foreground leading-relaxed">{benefit}</span>
+                      </li>
+                    ))
+                  : <li className="text-sm text-muted-foreground">No benefits listed</li>
+                }
               </ul>
             </CardContent>
           </Card>

@@ -17,8 +17,13 @@ export async function GET(request: NextRequest) {
     }).sort({ createdAt: -1 });
 
     return NextResponse.json({ competitors });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Fetch competitors error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 503 });
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 

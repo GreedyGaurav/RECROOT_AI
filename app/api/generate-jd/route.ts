@@ -34,17 +34,24 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Generate JD error:', error);
     
-    if (error.message.includes('GEMINI_API_KEY')) {
+    if (error.message?.includes('GEMINI_API_KEY')) {
       return NextResponse.json(
         { error: 'Gemini API key not configured' },
         { status: 500 }
       );
     }
     
-    if (error.message.includes('Failed to generate')) {
+    if (error.message?.includes('Failed to generate')) {
       return NextResponse.json(
         { error: 'Failed to generate job description. Please try again.' },
         { status: 500 }
+      );
+    }
+    
+    if (error.message?.includes('quota') || error.message?.includes('rate limit')) {
+      return NextResponse.json(
+        { error: 'API quota exceeded. Please try again later.' },
+        { status: 429 }
       );
     }
 

@@ -13,8 +13,13 @@ export async function GET(request: NextRequest) {
     const drafts = await JobDescription.find({ userId: currentUser.userId, isDraft: true })
       .sort({ createdAt: -1 });
     return NextResponse.json({ drafts });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Fetch drafts error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 503 });
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

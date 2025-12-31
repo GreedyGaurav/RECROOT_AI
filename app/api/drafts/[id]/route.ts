@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     const currentUser = getCurrentUser(request);
@@ -13,9 +13,10 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const resolvedParams = await Promise.resolve(params);
     await dbConnect();
     const draft = await JobDescription.findOne({
-      _id: params.id,
+      _id: resolvedParams.id,
       userId: currentUser.userId,
     });
 
@@ -24,15 +25,20 @@ export async function GET(
     }
 
     return NextResponse.json({ draft });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Fetch draft error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 503 });
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     const currentUser = getCurrentUser(request);
@@ -40,9 +46,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const resolvedParams = await Promise.resolve(params);
     await dbConnect();
     const draft = await JobDescription.findOneAndDelete({
-      _id: params.id,
+      _id: resolvedParams.id,
       userId: currentUser.userId,
     });
 
@@ -51,8 +58,13 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: 'Draft deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Delete draft error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 503 });
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 

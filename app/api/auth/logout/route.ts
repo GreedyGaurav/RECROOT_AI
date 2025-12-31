@@ -7,11 +7,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Clear the token cookie
+    const isProduction = process.env.NODE_ENV === 'production';
     response.cookies.set('token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 0, // Expire immediately
+      path: '/',
     });
 
     return response;

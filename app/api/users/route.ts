@@ -34,6 +34,14 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Get users error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json(
+        { error: 'Database connection failed' },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -106,6 +114,14 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: any) {
     console.error('Create user error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json(
+        { error: 'Database connection failed' },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

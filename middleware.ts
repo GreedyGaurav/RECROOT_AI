@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getCurrentUser } from './auth';
+import { getCurrentUser } from './lib/auth';
 
 export function middleware(request: NextRequest) {
   // Get the pathname
@@ -26,7 +26,7 @@ export function middleware(request: NextRequest) {
 
   // If accessing login/register with valid token, redirect to dashboard
   if ((path === '/login' || path === '/register') && token) {
-    const dashboardUrl = new URL('/dashboard', request.url);
+    const dashboardUrl = new URL('/', request.url);
     return NextResponse.redirect(dashboardUrl);
   }
 
@@ -44,4 +44,4 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
-}; 
+};

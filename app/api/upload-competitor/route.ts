@@ -45,8 +45,13 @@ export async function POST(request: NextRequest) {
       message: 'Competitor JD uploaded successfully',
       id: competitorJD._id 
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Upload competitor JD error:', error);
+    
+    if (error.message?.includes('ENOTFOUND') || error.message?.includes('querySrv')) {
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 503 });
+    }
+    
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 

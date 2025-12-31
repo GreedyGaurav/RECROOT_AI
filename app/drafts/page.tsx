@@ -28,7 +28,10 @@ export default function DraftsPage() {
         setDrafts(data.drafts || [])
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch((error) => {
+        console.error('Failed to fetch drafts:', error)
+        setLoading(false)
+      })
   }, [user])
 
   const handleViewDraft = (draftId: string) => {
@@ -36,23 +39,38 @@ export default function DraftsPage() {
   }
 
   const handleCopyDraft = async (draft: any) => {
+    if (!draft || !draft.generatedContent) {
+      toast({
+        title: "Error",
+        description: "Draft data is incomplete",
+        variant: "destructive",
+      })
+      return
+    }
+
     const jdText = `
-Job Title: ${draft.jobTitle}
-Experience Level: ${draft.experienceLevel}
-Work Mode: ${draft.workMode}
-Tech Stack: ${draft.techStack.join(', ')}
+Job Title: ${draft.jobTitle || 'N/A'}
+Experience Level: ${draft.experienceLevel || 'N/A'}
+Work Mode: ${draft.workMode || 'N/A'}
+Tech Stack: ${Array.isArray(draft.techStack) ? draft.techStack.join(', ') : 'N/A'}
 
 About Us:
-${draft.generatedContent.aboutUs}
+${draft.generatedContent.aboutUs || 'N/A'}
 
 Responsibilities:
-${draft.generatedContent.responsibilities.map((r: string) => `• ${r}`).join('\n')}
+${Array.isArray(draft.generatedContent.responsibilities) 
+  ? draft.generatedContent.responsibilities.map((r: string) => `• ${r}`).join('\n')
+  : 'N/A'}
 
 Required Skills:
-${draft.generatedContent.requiredSkills.map((s: string) => `• ${s}`).join('\n')}
+${Array.isArray(draft.generatedContent.requiredSkills)
+  ? draft.generatedContent.requiredSkills.map((s: string) => `• ${s}`).join('\n')
+  : 'N/A'}
 
 Benefits:
-${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
+${Array.isArray(draft.generatedContent.benefits)
+  ? draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')
+  : 'N/A'}
     `.trim()
 
     try {
@@ -191,12 +209,12 @@ ${draft.generatedContent.benefits.map((b: string) => `• ${b}`).join('\n')}
                     <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
                       {draft.workMode}
                     </span>
-                    {draft.techStack.slice(0, 2).map((tech: string, index: number) => (
+                    {Array.isArray(draft.techStack) && draft.techStack.slice(0, 2).map((tech: string, index: number) => (
                       <span key={index} className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
                         {tech}
                       </span>
                     ))}
-                    {draft.techStack.length > 2 && (
+                    {Array.isArray(draft.techStack) && draft.techStack.length > 2 && (
                       <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
                         +{draft.techStack.length - 2} more
                       </span>

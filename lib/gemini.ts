@@ -25,7 +25,18 @@ export interface GeneratedJobDescription {
 
 export async function generateJobDescription(input: JobDescriptionInput): Promise<GeneratedJobDescription> {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    // Try the latest model first, fallback to older versions if needed
+    let model;
+    try {
+      model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    } catch (modelError) {
+      // Fallback to alternative model names
+      try {
+        model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      } catch {
+        model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+      }
+    }
 
     const prompt = `
 You are an expert HR professional and job description writer. Create a compelling job description for the following role:
@@ -61,19 +72,41 @@ Return the response in this exact JSON format:
     // Extract JSON from the response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
+      console.error('Failed to extract JSON from response:', text);
       throw new Error('Failed to parse AI response');
     }
     
-    const parsed = JSON.parse(jsonMatch[0]);
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Extracted text:', jsonMatch[0]);
+      throw new Error('Failed to parse AI response as JSON');
+    }
+    
+    // Validate required fields
+    if (!parsed.aboutUs || !parsed.responsibilities || !parsed.requiredSkills || !parsed.benefits) {
+      throw new Error('AI response missing required fields');
+    }
     
     return {
       aboutUs: parsed.aboutUs,
-      responsibilities: parsed.responsibilities,
-      requiredSkills: parsed.requiredSkills,
-      benefits: parsed.benefits,
+      responsibilities: Array.isArray(parsed.responsibilities) ? parsed.responsibilities : [],
+      requiredSkills: Array.isArray(parsed.requiredSkills) ? parsed.requiredSkills : [],
+      benefits: Array.isArray(parsed.benefits) ? parsed.benefits : [],
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API error:', error);
-    throw new Error('Failed to generate job description');
+    
+    if (error.message?.includes('API_KEY')) {
+      throw new Error('GEMINI_API_KEY is invalid or not set');
+    }
+    
+    if (error.message?.includes('quota') || error.message?.includes('rate limit')) {
+      throw new Error('Gemini API quota exceeded. Please try again later.');
+    }
+    
+    throw new Error(error.message || 'Failed to generate job description');
   }
 } 
